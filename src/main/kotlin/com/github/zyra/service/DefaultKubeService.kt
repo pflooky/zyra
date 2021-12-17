@@ -7,6 +7,8 @@ import com.github.zyra.model.AdmissionReviewRequest
 import com.github.zyra.model.AdmissionReviewResponse
 import com.github.zyra.model.Patch
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.io.ResourceLoader
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,11 +21,11 @@ class DefaultKubeService(private val patchConfig: Map<String, List<Patch>>) : Ku
         admissionReviewRequest: AdmissionReviewRequest,
         type: String
     ): AdmissionReviewResponse {
-        val baseLog = "task=get-json-patch, type(s)=$type, name=${admissionReviewRequest.request.name}"
         val allJsonPatches = type.split(",")
             .flatMap { patchType ->
-                patchType.trim()
-                val jsonPatch = patchConfig?.get(patchType)
+                val trimType = patchType.trim()
+                val baseLog = "task=get-json-patch, type=$trimType, name=${admissionReviewRequest.request.name}"
+                val jsonPatch = patchConfig[trimType]
                 if (jsonPatch.isNullOrEmpty()) {
                     logger.warn("$baseLog, msg=No corresponding patch found for type. Will continue with empty patch")
                 } else {

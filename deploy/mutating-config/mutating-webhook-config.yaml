@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: zyra.mutate.webhook
+  namespace: default
+  labels:
+    app: zyra
+webhooks:
+  - name: zyra.mutate.webhook
+    sideEffects: None
+    timeoutSeconds: 5
+    reinvocationPolicy: Never
+    failurePolicy: Fail
+    admissionReviewVersions: ["v1", "v1beta1"]
+    clientConfig:
+      service:
+        name: zyra
+        namespace: default
+        path: "/kube/patch/simple-apps"
+        port: 443
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCakNDQWU2Z0F3SUJBZ0lCQVRBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwdGFXNXAKYTNWaVpVTkJNQjRYRFRJeE1EWXhPREE1TXpneE9Wb1hEVE14TURZeE56QTVNemd4T1Zvd0ZURVRNQkVHQTFVRQpBeE1LYldsdWFXdDFZbVZEUVRDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTExCCjNmUUpJeWN6a1RyYzhZRXpTamVsaVh2bm5WamkraFlPQWhwS2xUUDJ3TTRGOWQ2VDFWa2psekJUd3BVQjVybDMKcGVYdGxLUTdpVHlZcmcxcjNyWFg1N1ZjZ3hTckdYYUFPeW5ZOFdYVXNveHBEdXdqUnd5L3hVVXluTE4vMzBPagpvOC8rM2szaXVPd2dnbSsxSTRWbUlzNnJmQm5PcnlwWkNmeXRJZmhud2ZOd1R3L3J2bTkyV2crZjFIdjl6Y21oCjZxS25PRVZibWs2QXdEM2svZURETmFkMXJrYXdVSnFhNmozMXVzYTZtV3ZiT2F0Nmk5eUxDZnVxaFZoVm9BRkIKM1JRTEhmcTFGdWlDbUx6UHFqUFlKU2VUUDJLejB6RUdlNVJWem1VVkJkSGViZCtOODlpTE8rZ250TWZwKzdUQgpVSEp3Vzh2UmJSNE92dkVPMDJNQ0F3RUFBYU5oTUY4d0RnWURWUjBQQVFIL0JBUURBZ0trTUIwR0ExVWRKUVFXCk1CUUdDQ3NHQVFVRkJ3TUNCZ2dyQmdFRkJRY0RBVEFQQmdOVkhSTUJBZjhFQlRBREFRSC9NQjBHQTFVZERnUVcKQkJROHZFZTdnNTB5dzBBd2pJcHV4UDBFZmdheEFqQU5CZ2txaGtpRzl3MEJBUXNGQUFPQ0FRRUFsRkNJVFJUeQpteDBhdGJNSHJNYXh0Vi9tZjQyRlpqcmErRzJBOFJJOTFwYTJCQTJmSllMRHZPaHVCOWJzUmlydXBOblpkOGtFCitFRkFDVFErR1RCMzNZR25iRzN3YlYwU0VSYm5hRktCZzJjWWxCenRRb2FVemNRYllkaEhDbklkVk5QUVk0ZU0KRVhqL04wVnUybHhWTXYvMkxCSDA1ekVDUGdCTURNZmtybURmd0NQOHFiY3NZRXFUQTBHRk9RL2s3TUZxZ2ZtTQpRQ0toemltVkRmVHJpZlQzV0JjWSsyUW4vb0lnelJEb1JXSWJucTg4M251VlpsM0hVK3AyR1cvbmY1K1ZMVyswCmJYT1JJYm5LYVRnZUJTNnk1c3FNSUJOKzJORnFTNERsM3ZzVE1ZMkwzWEovVkN4WXc1djVJYXlMY25WMCtsM0EKa1NmWkx0YnJzNmdFdkE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    rules:
+      - operations: ["CREATE"]
+        apiGroups: ["*"]
+        apiVersions: ["*"]
+        resources: ["pods"]
+    objectSelector:
+      matchLabels:
+        app: backend

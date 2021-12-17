@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: zyra.mutate.webhook
+  namespace: default
+  labels:
+    app: zyra
+webhooks:
+  - name: zyra.mutate.webhook
+    sideEffects: None
+    timeoutSeconds: 5
+    reinvocationPolicy: Never
+    failurePolicy: Fail
+    admissionReviewVersions: ["v1", "v1beta1"]
+    clientConfig:
+      service:
+        name: zyra
+        namespace: default
+        path: "/kube/patch/simple-apps"
+        port: 443
+      caBundle: ${CA_BUNDLE}
+    rules:
+      - operations: ["CREATE"]
+        apiGroups: ["*"]
+        apiVersions: ["*"]
+        resources: ["pods"]
+    objectSelector:
+      matchLabels:
+        app: backend

@@ -3,12 +3,18 @@ package com.github.zyra.config
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.zyra.model.Patch
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
+import org.springframework.core.io.ResourceLoader
 import org.springframework.stereotype.Component
 import java.io.File
 
 @Component
-class PatchConfig {
+class PatchConfig(
+    private val resourceLoader: ResourceLoader,
+    @Value("\${patch-config.path}") private val configPath: String
+) {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
     private val objectMapper = ObjectMapper()
@@ -16,7 +22,8 @@ class PatchConfig {
     @Bean
     fun getPatches(): Map<String, List<Patch>> {
         val patchList: List<Patch> = mutableListOf()
-        return javaClass.getResource("/patch")?.path?.let { patchPath ->
+        logger.info("task=get-patch-config, path=$configPath, msg=Getting patch configs from path")
+        return resourceLoader.getResource(configPath).file.path.let { patchPath ->
             File(patchPath)
                 .listFiles()
                 ?.filter { it.extension == "json" }

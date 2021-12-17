@@ -1,0 +1,12 @@
+server:
+  ssl:
+    enabled: ${SSL_ENABLED:false}
+    key-store-type: ${SSL_KEY_STORE_TYPE:PKCS12}
+    key-store-password: ${SSL_KEY_STORE_PASSWORD:changeit}
+    key-store: ${SSL_KEY_STORE_PATH:classpath:keystore/keystore.p12}
+    protocol: ${SSL_PROTOCOL:TLS}
+    enabled-protocols: ${SSL_ENABLED_PROTOCOLS:TLSv1.2}
+  port: ${SERVER_PORT:8080}
+
+patch-config:
+  path: "${PATCH_CONFIG_PATH:classpath:patch}"  #if you want as direct path, file:<path to patch config folder>

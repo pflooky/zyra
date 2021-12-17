@@ -1,0 +1,9 @@
+[
+  {
+    "op": "add",
+    "path": "/spec/volumes/-",
+    "value": {
+      "name": "tmp-dir",
+      "emptyDir": {}
+    }
+  }
